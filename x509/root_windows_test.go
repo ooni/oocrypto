@@ -1,4 +1,4 @@
-// Copyright 2013 The Go Authors. All rights reserved.
+// Copyright 2021 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -31,7 +31,6 @@ func TestPlatformVerifier(t *testing.T) {
 		host        string
 		verifyName  string
 		verifyTime  time.Time
-		verifyEKU   []x509.ExtKeyUsage
 		expectedErr string
 	}{
 		{
@@ -42,50 +41,34 @@ func TestPlatformVerifier(t *testing.T) {
 		{
 			name:        "expired leaf",
 			host:        "expired.badssl.com",
-			expectedErr: "x509: “*.badssl.com” certificate is expired",
+			expectedErr: "x509: certificate has expired or is not yet valid: ",
 		},
 		{
 			name:        "wrong host for leaf",
 			host:        "wrong.host.badssl.com",
 			verifyName:  "wrong.host.badssl.com",
-			expectedErr: "x509: “*.badssl.com” certificate name does not match input",
+			expectedErr: "x509: certificate is valid for *.badssl.com, badssl.com, not wrong.host.badssl.com",
 		},
 		{
 			name:        "self-signed leaf",
 			host:        "self-signed.badssl.com",
-			expectedErr: "x509: “*.badssl.com” certificate is not trusted",
+			expectedErr: "x509: certificate signed by unknown authority",
 		},
 		{
 			name:        "untrusted root",
 			host:        "untrusted-root.badssl.com",
-			expectedErr: "x509: “BadSSL Untrusted Root Certificate Authority” certificate is not trusted",
-		},
-		{
-			name:        "revoked leaf",
-			host:        "revoked.badssl.com",
-			expectedErr: "x509: “revoked.badssl.com” certificate is revoked",
-		},
-		{
-			name:        "leaf missing SCTs",
-			host:        "no-sct.badssl.com",
-			expectedErr: "x509: “no-sct.badssl.com” certificate is not standards compliant",
+			expectedErr: "x509: certificate signed by unknown authority",
 		},
 		{
 			name:        "expired leaf (custom time)",
 			host:        "google.com",
 			verifyTime:  time.Time{}.Add(time.Hour),
-			expectedErr: "x509: “*.google.com” certificate is expired",
+			expectedErr: "x509: certificate has expired or is not yet valid: ",
 		},
 		{
 			name:       "valid chain (custom time)",
 			host:       "google.com",
 			verifyTime: time.Now(),
-		},
-		{
-			name:        "leaf doesn't have acceptable ExtKeyUsage",
-			host:        "google.com",
-			expectedErr: "x509: certificate specifies an incompatible key usage",
-			verifyEKU:   []x509.ExtKeyUsage{x509.ExtKeyUsageEmailProtection},
 		},
 	}
 
@@ -104,9 +87,6 @@ func TestPlatformVerifier(t *testing.T) {
 			}
 			if !tc.verifyTime.IsZero() {
 				opts.CurrentTime = tc.verifyTime
-			}
-			if len(tc.verifyEKU) > 0 {
-				opts.KeyUsages = tc.verifyEKU
 			}
 
 			_, err := chain[0].Verify(opts)

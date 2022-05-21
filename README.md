@@ -51,6 +51,8 @@ git checkout -b merged-main
 git merge golang-http-upstream
 ```
 
+- [ ] fix all the likely merge conflicts
+
 - [ ] delete all the new packages we can safely delete. We can safely
 delete a package if the package is not `tls` and:
 
@@ -63,3 +65,5 @@ currently only holds for `aes` (see [aes/const.go](aes/const.go))
 - [ ] `go build -v ./...` must succeed
 
 - [ ] `go test -race ./...` must succeed
+
+- [ ] open a pull request and merge it preserving history

@@ -50,3 +50,12 @@ git checkout main
 git checkout -b merged-main
 git merge golang-http-upstream
 ```
+
+- [ ] delete all the new packages we can safely delete. We can safely
+delete a package if the packet is not `tls` and:
+
+1. either the package does not depend on `internal/cpu`
+
+2. or the documentation of the package does not explicitly state that
+the package is only secure depending on the CPU configuration, which
+currently only holds for `aes` (see [aes/const.go](aes/const.go))

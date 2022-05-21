@@ -52,7 +52,7 @@ git merge golang-http-upstream
 ```
 
 - [ ] delete all the new packages we can safely delete. We can safely
-delete a package if the packet is not `tls` and:
+delete a package if the package is not `tls` and:
 
 1. either the package does not depend on `internal/cpu`
 

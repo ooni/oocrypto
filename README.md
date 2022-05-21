@@ -59,3 +59,7 @@ delete a package if the packet is not `tls` and:
 2. or the documentation of the package does not explicitly state that
 the package is only secure depending on the CPU configuration, which
 currently only holds for `aes` (see [aes/const.go](aes/const.go))
+
+- [ ] `go build -v ./...` must succeed
+
+- [ ] `go test -race ./...` must succeed

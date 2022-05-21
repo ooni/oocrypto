@@ -9,9 +9,10 @@ package aes
 
 import (
 	"crypto/cipher"
-	subtleoverlap "crypto/internal/subtle"
-	"crypto/subtle"
 	"errors"
+
+	subtleoverlap "github.com/ooni/oocrypto/internal/subtle"
+	"github.com/ooni/oocrypto/subtle"
 )
 
 // The following functions are defined in gcm_*.s.

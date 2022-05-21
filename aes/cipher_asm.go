@@ -9,8 +9,9 @@ package aes
 
 import (
 	"crypto/cipher"
-	"crypto/internal/subtle"
-	"internal/cpu"
+
+	"github.com/ooni/oocrypto/internal/subtle"
+	"golang.org/x/sys/cpu"
 )
 
 // defined in asm_*.s

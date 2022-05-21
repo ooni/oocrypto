@@ -6,8 +6,9 @@ package aes
 
 import (
 	"crypto/cipher"
-	"crypto/internal/subtle"
 	"strconv"
+
+	"github.com/ooni/oocrypto/internal/subtle"
 )
 
 // The AES block size in bytes.

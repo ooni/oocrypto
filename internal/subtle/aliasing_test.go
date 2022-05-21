@@ -7,7 +7,7 @@ package subtle_test
 import (
 	"testing"
 
-	"crypto/internal/subtle"
+	"github.com/ooni/oocrypto/internal/subtle"
 )
 
 var a, b [100]byte

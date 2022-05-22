@@ -3,10 +3,12 @@
 package tls
 
 import (
-	"crypto/tls"
+	"context"
+	stdlibtls "crypto/tls"
 	"crypto/x509"
 	"errors"
 	"net"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -14,11 +16,11 @@ import (
 func TestNewClientConnStdlib(t *testing.T) {
 	tests := []struct {
 		name   string
-		config *tls.Config
+		config *stdlibtls.Config
 		err    error
 	}{{
 		name: "with only supported config fields",
-		config: &tls.Config{
+		config: &stdlibtls.Config{
 			DynamicRecordSizingDisabled: true,
 			RootCAs:                     x509.NewCertPool(),
 			ServerName:                  "ooni.org",
@@ -30,7 +32,7 @@ func TestNewClientConnStdlib(t *testing.T) {
 		err: nil,
 	}, {
 		name: "with unsupported fields",
-		config: &tls.Config{
+		config: &stdlibtls.Config{
 			Time: func() time.Time {
 				return time.Now()
 			},
@@ -50,6 +52,93 @@ func TestNewClientConnStdlib(t *testing.T) {
 			}
 			if err == nil && got == nil {
 				t.Fatal("expected non-nil conn here")
+			}
+		})
+	}
+}
+
+// connStdlibUnderlyingConnMockable allows to mock connStdlibUnderlyingConn.
+type connStdlibUnderlyingConnMockable struct {
+	// Conn is the embedded mockable Conn.
+	net.Conn
+
+	// MockConnectionState allows to mock the ConnectionState method.
+	MockConnectionState func() ConnectionState
+
+	// MockHandshakeContext allows to mock the HandshakeContext method.
+	MockHandshakeContext func(ctx context.Context) error
+}
+
+// ConnectionState calls MockConnectionState.
+func (c *connStdlibUnderlyingConnMockable) ConnectionState() ConnectionState {
+	return c.MockConnectionState()
+}
+
+// HandshakeContext calls MockHandshakeContext.
+func (c *connStdlibUnderlyingConnMockable) HandshakeContext(ctx context.Context) error {
+	return c.MockHandshakeContext(ctx)
+}
+
+func TestConnStdlib_ConnectionState(t *testing.T) {
+	type fields struct {
+		connLike connStdlibUnderlyingConn
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   stdlibtls.ConnectionState
+	}{{
+		name: "common case",
+		fields: fields{
+			connLike: &connStdlibUnderlyingConnMockable{
+				MockConnectionState: func() ConnectionState {
+					return ConnectionState{
+						Version:                    1,
+						HandshakeComplete:          true,
+						DidResume:                  true,
+						CipherSuite:                2,
+						NegotiatedProtocol:         "echo",
+						NegotiatedProtocolIsMutual: true,
+						ServerName:                 "x.org",
+						PeerCertificates: []*x509.Certificate{{
+							Raw: []byte{0x01},
+						}},
+						VerifiedChains: [][]*x509.Certificate{{{
+							Raw: []byte{0x77},
+						}}},
+						SignedCertificateTimestamps: [][]byte{{0x44}},
+						OCSPResponse:                []byte{0x14, 0x11},
+						TLSUnique:                   []byte{0x17},
+					}
+				},
+			},
+		},
+		want: stdlibtls.ConnectionState{
+			Version:                    1,
+			HandshakeComplete:          true,
+			DidResume:                  true,
+			CipherSuite:                2,
+			NegotiatedProtocol:         "echo",
+			NegotiatedProtocolIsMutual: true,
+			ServerName:                 "x.org",
+			PeerCertificates: []*x509.Certificate{{
+				Raw: []byte{0x01},
+			}},
+			VerifiedChains: [][]*x509.Certificate{{{
+				Raw: []byte{0x77},
+			}}},
+			SignedCertificateTimestamps: [][]byte{{0x44}},
+			OCSPResponse:                []byte{0x14, 0x11},
+			TLSUnique:                   []byte{0x17},
+		},
+	}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &ConnStdlib{
+				connStdlibUnderlyingConn: tt.fields.connLike,
+			}
+			if got := c.ConnectionState(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ConnStdlib.ConnectionState() = %v, want %v", got, tt.want)
 			}
 		})
 	}

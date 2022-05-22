@@ -23,6 +23,40 @@ the source, which is documented in the [Update procedure](#update-procedure) sec
 standard library is composed of tightly integrated packages, hence
 using this code with another Go version could cause subtle security issues.
 
+The [tls/stdlibwrapper.go](tls/stdlibwrapper.go) file contains an API that allows
+converting code using `crypto/tls` to code using this package.
+
+```Go
+func NewClientConnStdlib(conn net.Conn, config *stdlibtls.Config) (*ConnStdlib, error)
+```
+
+The `NewClientConnStdlib` creates a new client conn taking in input a
+`tls.Config` struct as exposed by the stdlib `crypto/tls` package. The
+function returns error if you passed in config fields that we don't
+know (yet?) how to convert from their stdlib definition to the equivalent
+definition of `Config` implemented by this module.
+
+The returned `ConnStdlib` type implements the following interface, which
+is equivalent to [oohttp](https://github.com/ooni/oohttp)'s `TLSConn`:
+
+```Go
+import (
+    "context"
+    "crypto/tls"
+)
+
+type TLSConn interface {
+    net.Conn
+
+    HandshakeContext(ctx context.Context) error
+
+    ConnectionState() tls.ConnectionState
+}
+```
+
+These changes are sufficient for OONI to use this library instead
+of using `crypto/tls` as the underlying TLS library.
+
 ## License
 
 Each individual file from the `crypto` fork maintains its original
@@ -101,6 +135,9 @@ I have not find a way for getting results for all architectures)
 can get a list of packages using `tree -d`)
 
 - [ ] manually import the latest `src/internal/godebug` from upstream
+
+- [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
+in the `ConnStdlib.ConnectionState` method
 
 - [ ] `go build -v ./...` must succeed
 

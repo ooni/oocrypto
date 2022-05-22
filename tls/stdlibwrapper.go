@@ -3,7 +3,8 @@
 package tls
 
 import (
-	"crypto/tls"
+	"context"
+	stdlibtls "crypto/tls"
 	"errors"
 	"fmt"
 	"net"
@@ -20,6 +21,8 @@ var ErrIncompatibleStdlibConfig = errors.New("ootls: incompatible stdlib config"
 //
 // The config cannot be nil: users must set either ServerName or
 // InsecureSkipVerify in the config.
+//
+// This function returns a *ConnStdlib type in case of success.
 //
 // This function will return ErrIncompatibleStdlibConfig if unsupported
 // fields have a nonzero value, because the resulting Conn will not
@@ -40,7 +43,7 @@ var ErrIncompatibleStdlibConfig = errors.New("ootls: incompatible stdlib config"
 // - RootCAs
 //
 // - ServerName
-func NewClientConnStdlib(conn net.Conn, config *tls.Config) (*Conn, error) {
+func NewClientConnStdlib(conn net.Conn, config *stdlibtls.Config) (*ConnStdlib, error) {
 	supportedFields := map[string]bool{
 		"DynamicRecordSizingDisabled": true,
 		"InsecureSkipVerify":          true,
@@ -73,5 +76,57 @@ func NewClientConnStdlib(conn net.Conn, config *tls.Config) (*Conn, error) {
 		RootCAs:                     config.RootCAs,
 		ServerName:                  config.ServerName,
 	}
-	return Client(conn, ourConfig), nil
+	return &ConnStdlib{Client(conn, ourConfig)}, nil
+}
+
+// connStdlibUnderlyingConn is similar to oohttp.TLSConn but its ConnectionState
+// method returns the ConnectionState defined by this package rather than the
+// equivalent one defined by crypto/tls in the stdlib.
+//
+// We use this type instead of directly using *Conn to simplify unit
+// testing of the ConnStdlib.ConnectionState method.
+type connStdlibUnderlyingConn interface {
+	net.Conn
+	HandshakeContext(ctx context.Context) error
+	ConnectionState() ConnectionState
+}
+
+// ConnStdlib is the Conn-like type returned by NewClientConnStdlib. This type
+// is pretty much like this package's Conn except that the ConnectionState method
+// returns crypto/tls's ConnectionState. This change is enough to make this
+// struct compatible with github.com/ooni/oohttp.TLSConn.
+type ConnStdlib struct {
+	connStdlibUnderlyingConn
+}
+
+// connStdlibOOHTTPTLSLikeConn is equivalent to oohttp.TLSConn. We want this type to ensure
+// our ConnStdlib type implements the desired interface used by OONI.
+type connStdlibOOHTTPTLSLikeConn interface {
+	net.Conn
+
+	HandshakeContext(ctx context.Context) error
+
+	ConnectionState() stdlibtls.ConnectionState
+}
+
+var _ connStdlibOOHTTPTLSLikeConn = &ConnStdlib{} // ensure we implement this interface
+
+// ConnectionState converts the underlying Conn's ConnectionState to the
+// equivalent type exported by the Go standard library.
+func (c *ConnStdlib) ConnectionState() stdlibtls.ConnectionState {
+	state := c.connStdlibUnderlyingConn.ConnectionState()
+	return stdlibtls.ConnectionState{
+		Version:                     state.Version,
+		HandshakeComplete:           state.HandshakeComplete,
+		DidResume:                   state.DidResume,
+		CipherSuite:                 state.CipherSuite,
+		NegotiatedProtocol:          state.NegotiatedProtocol,
+		NegotiatedProtocolIsMutual:  state.NegotiatedProtocolIsMutual,
+		ServerName:                  state.ServerName,
+		PeerCertificates:            state.PeerCertificates,
+		VerifiedChains:              state.VerifiedChains,
+		SignedCertificateTimestamps: state.SignedCertificateTimestamps,
+		OCSPResponse:                state.OCSPResponse,
+		TLSUnique:                   state.TLSUnique,
+	}
 }

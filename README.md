@@ -12,8 +12,9 @@ To solve our issues with Android apps, we originally forked golang/go
 itself at [ooni/go](https://github.com/ooni/go). However, a full fork of
 Go required us to compile this fork and build Android apps using it,
 which was making building OONI excessively complicated. Hence, we later
-chose to just fork the `crypto` package. We will continue to keep this
-fork up to date as long as it serves our goals.
+chose to just fork the `crypto` package and documented our efforts at
+[ooni/probe#2106](https://github.com/ooni/probe/issues/2106). We
+will continue to keep this fork up to date as long as it serves our goals.
 
 ## Intended usage
 

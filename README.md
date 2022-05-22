@@ -96,7 +96,10 @@ I have not find a way for getting results for all architectures)
 
 3. `git grep 'aes"'`
 
-- [ ] double check whether we need to add more checks to the list above
+- [ ] double check whether we need to add more checks to the list above (you
+can get a list of packages using `tree -d`)
+
+- [ ] manually import the latest `src/internal/godebug` from upstream
 
 - [ ] `go build -v ./...` must succeed
 

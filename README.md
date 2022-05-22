@@ -15,13 +15,20 @@ which was making building OONI excessively complicated. Hence, we later
 chose to just fork the `crypto` package. We will continue to keep this
 fork up to date as long as it serves our goals.
 
+## Intended usage
+
+You SHOULD (and probably MUST) use this package with the exact Go
+version from which we extracted the source. The standard library is
+composed of tightly integrated packages, hence using this code
+with another Go version could cause subtle security issues.
+
 ## License
 
 Each individual file from the `crypto` fork maintains its original
-copyright and any change to such files authored by us keeps the same
-BSD license of the original code. Because we anticipate integrating
-code under the GPL license from `Yawning/utls` we chose to license the
-repository using the GPL.
+copyright and [license](https://github.com/golang/go/blob/master/LICENSE). Any
+change to such files authored by us keeps the same 3-clause BSD license of
+the original code. Because we anticipate integrating code under the GPL license
+from `Yawning/utls` we chose to license the repository using the GPL.
 
 ```
 SPDX-License-Identifier: GPL-3.0-or-later

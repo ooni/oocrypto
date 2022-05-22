@@ -11,7 +11,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/rsa"
-	"crypto/subtle"
 	"crypto/x509"
 	"errors"
 	"fmt"
@@ -21,6 +20,8 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
+
+	"github.com/ooni/oocrypto/subtle"
 )
 
 type clientHandshakeState struct {

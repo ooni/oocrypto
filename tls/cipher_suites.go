@@ -6,7 +6,6 @@ package tls
 
 import (
 	"crypto"
-	"crypto/aes"
 	"crypto/cipher"
 	"crypto/des"
 	"crypto/hmac"
@@ -17,6 +16,7 @@ import (
 	"hash"
 	"runtime"
 
+	"github.com/ooni/oocrypto/aes"
 	"golang.org/x/crypto/chacha20poly1305"
 	"golang.org/x/sys/cpu"
 )

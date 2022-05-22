@@ -10,7 +10,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/rsa"
-	"crypto/subtle"
 	"crypto/x509"
 	"errors"
 	"fmt"
@@ -18,6 +17,8 @@ import (
 	"io"
 	"sync/atomic"
 	"time"
+
+	"github.com/ooni/oocrypto/subtle"
 )
 
 // serverHandshakeState contains details of a server handshake in progress.

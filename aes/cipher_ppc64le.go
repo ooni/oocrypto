@@ -6,7 +6,8 @@ package aes
 
 import (
 	"crypto/cipher"
-	"crypto/internal/subtle"
+
+	"github.com/ooni/oocrypto/internal/subtle"
 )
 
 // defined in asm_ppc64le.s

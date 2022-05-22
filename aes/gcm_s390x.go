@@ -6,11 +6,12 @@ package aes
 
 import (
 	"crypto/cipher"
-	subtleoverlap "crypto/internal/subtle"
-	"crypto/subtle"
 	"encoding/binary"
 	"errors"
 	"internal/cpu"
+
+	subtleoverlap "github.com/ooni/oocrypto/internal/subtle"
+	"github.com/ooni/oocrypto/subtle"
 )
 
 // This file contains two implementations of AES-GCM. The first implementation

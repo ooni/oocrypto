@@ -6,8 +6,9 @@ package aes
 
 import (
 	"crypto/cipher"
-	"crypto/internal/subtle"
 	"internal/cpu"
+
+	"github.com/ooni/oocrypto/internal/subtle"
 )
 
 type code int

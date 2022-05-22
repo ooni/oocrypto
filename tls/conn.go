@@ -10,7 +10,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/cipher"
-	"crypto/subtle"
 	"crypto/x509"
 	"errors"
 	"fmt"
@@ -20,6 +19,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/ooni/oocrypto/subtle"
 )
 
 // A Conn represents a secured connection.

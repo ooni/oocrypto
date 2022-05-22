@@ -62,6 +62,18 @@ delete a package if the package is not `tls` and:
 the package is only secure depending on the CPU configuration, which
 currently only holds for `aes` (see [aes/const.go](aes/const.go))
 
+- [ ] ensure that every forked package is never imported by using
+the following checks (we could also use `go list`, in principle, but
+I have not find a way for getting results for all architectures)
+
+1. `git grep 'subtle"'`
+
+2. `git grep 'tls"'`
+
+3. `git grep 'aes"'`
+
+- [ ] double check whether we need to add more checks to the list above
+
 - [ ] `go build -v ./...` must succeed
 
 - [ ] `go test -race ./...` must succeed

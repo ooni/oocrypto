@@ -9,9 +9,10 @@ package aes
 
 import (
 	"crypto/cipher"
-	"crypto/subtle"
 	"encoding/binary"
 	"errors"
+
+	"github.com/ooni/oocrypto/subtle"
 )
 
 // This file implements GCM using an optimized GHASH function.

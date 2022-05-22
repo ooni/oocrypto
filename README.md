@@ -18,11 +18,9 @@ fork up to date as long as it serves our goals.
 ## Intended usage
 
 You MUST use this package with the exact Go version from which we extracted
-the source. The standard library is composed of tightly integrated packages, hence
+the source, which is documented in the [Update procedure](#update-procedure) section. The
+standard library is composed of tightly integrated packages, hence
 using this code with another Go version could cause subtle security issues.
-
-You can find the version to which this commit is bound by checking the
-update script listed in the [Update procedure](#update-procedure) section.
 
 ## License
 
@@ -57,6 +55,9 @@ to improve hardware capability detection on `android/arm64`.
 (Adapted from ooni/oohttp instructions.)
 
 - [ ] check whether hardware capability detection has been improved upstream
+by reading [os_linux.go](https://github.com/golang/go/blob/go1.17.10/src/runtime/os_linux.go#L216)
+and update the link to `os_linux.go` based on the upstream version that
+we're tracking with this fork
 
 - [ ] run the following commands:
 

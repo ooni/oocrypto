@@ -17,6 +17,7 @@ import (
 	"runtime"
 
 	"github.com/ooni/oocrypto/aes"
+	"github.com/ooni/oocrypto/internal/cpuarm64"
 	"golang.org/x/crypto/chacha20poly1305"
 	"golang.org/x/sys/cpu"
 )
@@ -356,7 +357,7 @@ var defaultCipherSuitesTLS13NoAES = []uint16{
 
 var (
 	hasGCMAsmAMD64 = cpu.X86.HasAES && cpu.X86.HasPCLMULQDQ
-	hasGCMAsmARM64 = cpu.ARM64.HasAES && cpu.ARM64.HasPMULL
+	hasGCMAsmARM64 = cpuarm64.HasAES() && cpuarm64.HasPMULL()
 	// Keep in sync with crypto/aes/cipher_s390x.go.
 	hasGCMAsmS390X = cpu.S390X.HasAES && cpu.S390X.HasAESCBC && cpu.S390X.HasAESCTR &&
 		(cpu.S390X.HasGHASH || cpu.S390X.HasAESGCM)

@@ -1,5 +1,4 @@
 //go:build android && arm64
-// +build android,arm64
 
 // Copyright 2019 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style

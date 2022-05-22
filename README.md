@@ -45,7 +45,8 @@ Commit [1137f34](https://github.com/ooni/oocrypto/commit/1137f34fc78f7b5165a37f2
 merged go1.17.10 `src/crypto`'s subtree into this repository.
 
 [Subsequent commits](https://github.com/ooni/oocrypto/compare/1137f34fc78f7b5165a37f290e0b1c5e2fb074ac...f09fe46bcb80d2e747b0c0ea9a2835e70710690c)
-removed unused code and established a procedure to sync with upstream.
+removed unused code and established a procedure to sync with upstream. As part
+of these commits, we replaced `internal/cpu` with `golang.org/x/sys/cpu`.
 
 Finally, we landed [patches](https://github.com/ooni/oocrypto/compare/f09fe46bcb80d2e747b0c0ea9a2835e70710690c...4dff9e0864cd49113a36ac8112cf887cbe215d54)
 to improve hardware capability detection on `android/arm64`.

@@ -1,6 +1,6 @@
 # github.com/ooni/oocrypto
 
-This repository contains a fork of the Go standard library's `crypto`
+This repository contains a fork of a subset of the Go stdlib's `crypto`
 package including patches to allow selecting AES hardware support
 on Android devices. We documented why we need these patches at OONI in
 the [Making the OONI Probe Android app more resilient](
@@ -17,10 +17,12 @@ fork up to date as long as it serves our goals.
 
 ## Intended usage
 
-You SHOULD (and probably MUST) use this package with the exact Go
-version from which we extracted the source. The standard library is
-composed of tightly integrated packages, hence using this code
-with another Go version could cause subtle security issues.
+You MUST use this package with the exact Go version from which we extracted
+the source. The standard library is composed of tightly integrated packages, hence
+using this code with another Go version could cause subtle security issues.
+
+You can find the version to which this commit is bound by checking the
+update script listed in the [Update procedure](#update-procedure) section.
 
 ## License
 
@@ -39,9 +41,22 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Please, report issues in the [ooni/probe](https://github.com/ooni/probe)
 repository. Make sure you mention `oocrypto` in the issue title.
 
+## Patches
+
+Commit [1137f34](https://github.com/ooni/oocrypto/commit/1137f34fc78f7b5165a37f290e0b1c5e2fb074ac)
+merged go1.17.10 `src/crypto`'s subtree into this repository.
+
+[Subsequent commits](https://github.com/ooni/oocrypto/compare/1137f34fc78f7b5165a37f290e0b1c5e2fb074ac...f09fe46bcb80d2e747b0c0ea9a2835e70710690c)
+removed unused code and established a procedure to sync with upstream.
+
+Finally, we landed [patches](https://github.com/ooni/oocrypto/compare/f09fe46bcb80d2e747b0c0ea9a2835e70710690c...4dff9e0864cd49113a36ac8112cf887cbe215d54)
+to improve hardware capability detection on `android/arm64`.
+
 ## Update procedure
 
 (Adapted from ooni/oohttp instructions.)
+
+- [ ] check whether hardware capability detection has been improved upstream
 
 - [ ] run the following commands:
 

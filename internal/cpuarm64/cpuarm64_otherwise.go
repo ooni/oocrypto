@@ -1,4 +1,4 @@
-//go:build !android || !arm64
+//go:build arm64 && !android && !darwin
 
 package cpuarm64
 

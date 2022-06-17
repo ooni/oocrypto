@@ -18,5 +18,9 @@
 // choose AES in crypto/tls when the CPU supports it.
 //
 // This package is only a replacement for arm64. We use x/sys/cpu for
-// all arm64 systems but Android where we call getauxval(3).
+// all arm64 systems but Android where we call getauxval(3), *except* for
+// the concrete case of darwin/arm64, since the x/sys/cpu support for
+// darmin/arm64 is not implemented:
+// https://github.com/golang/go/issues/43046
+
 package cpuarm64

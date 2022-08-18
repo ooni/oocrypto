@@ -51,6 +51,8 @@ type TLSConn interface {
     HandshakeContext(ctx context.Context) error
 
     ConnectionState() tls.ConnectionState
+
+    NetConn() net.Conn
 }
 ```
 
@@ -91,7 +93,7 @@ to improve hardware capability detection on `android/arm64`.
 (Adapted from ooni/oohttp instructions.)
 
 - [ ] check whether hardware capability detection has been improved upstream
-by reading [os_linux.go](https://github.com/golang/go/blob/go1.18.2/src/runtime/os_linux.go#L238)
+by reading [os_linux.go](https://github.com/golang/go/blob/go1.19/src/runtime/os_linux.go#L238)
 and update the link to `os_linux.go` based on the upstream version that
 we're tracking with this fork
 
@@ -103,7 +105,7 @@ git checkout main
 git remote add golang git@github.com:golang/go.git || git fetch golang
 git branch -D golang-upstream golang-crypto-upstream merged-main || true
 git fetch golang
-git checkout -b golang-upstream go1.18.3
+git checkout -b golang-upstream go1.19
 git subtree split -P src/crypto/ -b golang-crypto-upstream
 git checkout main
 git checkout -b merged-main

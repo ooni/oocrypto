@@ -124,8 +124,8 @@ the package is only secure depending on the CPU configuration, which
 currently only holds for `aes` (see [aes/const.go](aes/const.go))
 
 - [ ] ensure that every forked package is never imported by using
-the following checks (we could also use `go list`, in principle, but
-I have not find a way for getting results for all architectures)
+the following checks (we could also use `go list` as follows
+`GOOS=os GOARCH=arch go list --json ./...`):
 
 1. `git grep 'subtle"'`
 
@@ -135,8 +135,6 @@ I have not find a way for getting results for all architectures)
 
 - [ ] double check whether we need to add more checks to the list above (you
 can get a list of packages using `tree -d`)
-
-- [ ] manually import the latest `src/internal/godebug` from upstream
 
 - [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
 in the `ConnStdlib.ConnectionState` method

@@ -9,6 +9,12 @@
 
 package cpuoverlay
 
+//
+// On android/arm64 /proc/sys/auxv is not readable on most
+// systems, therefore we need to call getauxval to load the
+// correct values, otherwise we think there's no arm64.
+//
+
 /*
 #include <sys/auxv.h>
 

@@ -1,4 +1,7 @@
-// Package cpuoverlay is a logic overlay on top of x/sys/cpu.
+// Package cpuoverlay is a logic overlay on top of x/sys/cpu that
+// attempts to avoid cases in which x/sys/cpu is wrong.
+//
+// android/arm64
 //
 // The main problem that we want to solve is that on Android there are
 // cases where reading /proc/self/auxv is not possible.
@@ -17,12 +20,22 @@
 // functionality. We limit ourselves to what we need in order to
 // choose AES in crypto/tls when the CPU supports it.
 //
-// Additionally, we may use this package to solve other CPU issues.
+// darwin/arm64
 //
-// This package defines GOOS/GOARCH specific files with predicate
-// functions for the architectures for which we need to overlay over
-// the functionality provided by the x/sys/cpu package.
+// Additionally, we may use this package to solve other CPU issues. For
+// example, x/sys/cpu does not currently know about darwin/arm64 features.
+//
+// Design
+//
+// This package contains GOOS/GOARCH-specific files with predicate
+// functions returning the correct value in cases in which x/sys/cpu
+// is wrong. You are expected to replace the code that normally
+// lives inside src/crypto/tls and src/cryto/aes and that we have
+// forked in this repository such that you call the predicates
+// of this package as opposed to using directly x/sys/cpu values.
 package cpuoverlay
+
+// We dispatch to GOOS/GOARCH specific implementations
 
 // Arm64HasAES returns whether the CPU supports AES.
 func Arm64HasAES() bool {

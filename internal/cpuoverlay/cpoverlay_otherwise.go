@@ -4,8 +4,12 @@ package cpuoverlay
 
 import "golang.org/x/sys/cpu"
 
-// This file is built when we're not on arm64. In which case we can
-// just return the (false) values hold by cpu.ARM64.HasXXX.
+//
+// This file is built when we're not on arm64 or we're on windows/arm64. In the
+// former case, just returning false would do. In the latter case, the right thing
+// to do is to return cpu.ARM64.HasXXX. Because cpu.ARM64.HasXXX are always false
+// when not on arm64, we conflate these two cases in a single file.
+//
 
 // arm64HasAES returns whether the CPU supports AES.
 func arm64HasAES() bool {

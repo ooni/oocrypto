@@ -1,4 +1,4 @@
-//go:build android && arm64
+//go:build arm64 && android
 
 // Copyright 2019 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -7,7 +7,7 @@
 // This file is based on the diff available at
 // https://go-review.googlesource.com/c/sys/+/197540/
 
-package cpuarm64
+package cpuoverlay
 
 /*
 #include <sys/auxv.h>
@@ -67,12 +67,12 @@ const (
 	hwcap_CPUID   = 1 << 11
 )
 
-// HasAES returns whether the CPU supports AES.
-func HasAES() bool {
+// arm64HasAES returns whether the CPU supports AES.
+func arm64HasAES() bool {
 	return (gethwcap() & hwcap_AES) != 0
 }
 
-// HasPMULL returns whether the CPU supports PMULL.
-func HasPMULL() bool {
+// arm64HasPMULL returns whether the CPU supports PMULL.
+func arm64HasPMULL() bool {
 	return (gethwcap() & hwcap_PMULL) != 0
 }

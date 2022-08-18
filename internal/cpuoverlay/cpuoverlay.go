@@ -1,6 +1,6 @@
-// Package cpuarm64 is a getauxval aware proxy for arm64 CPUs.
+// Package cpuoverlay is a logic overlay on top of x/sys/cpu.
 //
-// The problem that we want to solve is that on Android there are
+// The main problem that we want to solve is that on Android there are
 // cases where reading /proc/self/auxv is not possible.
 //
 // This causes crypto/tls to not choose AES where it would otherwise
@@ -17,6 +17,19 @@
 // functionality. We limit ourselves to what we need in order to
 // choose AES in crypto/tls when the CPU supports it.
 //
-// This package is only a replacement for arm64. We use x/sys/cpu for
-// all arm64 systems but Android where we call getauxval(3).
-package cpuarm64
+// Additionally, we may use this package to solve other CPU issues.
+//
+// This package defines GOOS/GOARCH specific files with predicate
+// functions for the architectures for which we need to overlay over
+// the functionality provided by the x/sys/cpu package.
+package cpuoverlay
+
+// Arm64HasAES returns whether the CPU supports AES.
+func Arm64HasAES() bool {
+	return arm64HasAES()
+}
+
+// Arm64HasPMULL returns whether the CPU supports PMULL.
+func Arm64HasPMULL() bool {
+	return arm64HasPMULL()
+}

@@ -14,11 +14,7 @@
 // the runtime package. However, runtime cannot use CGO. Doing that
 // leads to an import loop, so we cannot build.
 //
-// We could also try to parse /proc/cpuinfo (I didn't explore this route).
-//
-// The solution chosen here is to export predicates on the CPU
-// functionality. We limit ourselves to what we need in order to
-// choose AES in crypto/tls when the CPU supports it.
+// Until this is fixed in src/runtime, we call getauxval(3) here.
 //
 // darwin/arm64
 //

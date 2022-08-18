@@ -136,8 +136,6 @@ I have not find a way for getting results for all architectures)
 - [ ] double check whether we need to add more checks to the list above (you
 can get a list of packages using `tree -d`)
 
-- [ ] manually import the latest `src/internal/godebug` from upstream
-
 - [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
 in the `ConnStdlib.ConnectionState` method
 

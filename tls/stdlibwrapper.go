@@ -86,9 +86,17 @@ func NewClientConnStdlib(conn net.Conn, config *stdlibtls.Config) (*ConnStdlib, 
 // We use this type instead of directly using *Conn to simplify unit
 // testing of the ConnStdlib.ConnectionState method.
 type connStdlibUnderlyingConn interface {
+	// We need to have the same methods of a net.Conn
 	net.Conn
+
+	// We need to be able to handshake
 	HandshakeContext(ctx context.Context) error
+
+	// We need to get the TLS connection state
 	ConnectionState() ConnectionState
+
+	// We need to get the underlying net.Conn
+	NetConn() net.Conn
 }
 
 // ConnStdlib is the Conn-like type returned by NewClientConnStdlib. This type
@@ -106,7 +114,9 @@ type connStdlibOOHTTPTLSLikeConn interface {
 
 	HandshakeContext(ctx context.Context) error
 
-	ConnectionState() stdlibtls.ConnectionState
+	ConnectionState() stdlibtls.ConnectionState // We need to cast to stdlib
+
+	NetConn() net.Conn
 }
 
 var _ connStdlibOOHTTPTLSLikeConn = &ConnStdlib{} // ensure we implement this interface

@@ -9,7 +9,7 @@ package aes
 import (
 	"crypto/cipher"
 
-	"github.com/ooni/oocrypto/internal/cpuarm64"
+	"github.com/ooni/oocrypto/internal/cpuoverlay"
 	"github.com/ooni/oocrypto/internal/subtle"
 	"golang.org/x/sys/cpu"
 )
@@ -29,8 +29,8 @@ type aesCipherAsm struct {
 	aesCipher
 }
 
-var supportsAES = cpu.X86.HasAES || cpuarm64.HasAES()
-var supportsGFMUL = cpu.X86.HasPCLMULQDQ || cpuarm64.HasPMULL()
+var supportsAES = cpu.X86.HasAES || cpuoverlay.Arm64HasAES()
+var supportsGFMUL = cpu.X86.HasPCLMULQDQ || cpuoverlay.Arm64HasPMULL()
 
 func newCipher(key []byte) (cipher.Block, error) {
 	if !supportsAES {

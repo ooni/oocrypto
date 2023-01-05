@@ -17,7 +17,6 @@ import (
 	"runtime"
 
 	"github.com/ooni/oocrypto/aes"
-	"github.com/ooni/oocrypto/internal/boring"
 	"github.com/ooni/oocrypto/internal/cpuoverlay"
 	"golang.org/x/crypto/chacha20poly1305"
 	"golang.org/x/sys/cpu"

@@ -46,8 +46,6 @@ func newCipher(key []byte) (cipher.Block, error) {
 		rounds = 12
 	case 256 / 8:
 		rounds = 14
-	default:
-		return nil, KeySizeError(len(key))
 	}
 
 	expandKeyAsm(rounds, &key[0], &c.enc[0], &c.dec[0])

@@ -23,6 +23,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/ooni/oocrypto/internal/godebug"
 )
 
 const (
@@ -171,11 +173,11 @@ const (
 // hash function associated with the Ed25519 signature scheme.
 var directSigning crypto.Hash = 0
 
-// defaultSupportedSignatureAlgorithms contains the signature and hash algorithms that
+// supportedSignatureAlgorithms contains the signature and hash algorithms that
 // the code advertises as supported in a TLS 1.2+ ClientHello and in a TLS 1.2+
 // CertificateRequest. The two fields are merged to match with TLS 1.3.
 // Note that in TLS 1.2, the ECDSA algorithms are not constrained to P-256, etc.
-var defaultSupportedSignatureAlgorithms = []SignatureScheme{
+var supportedSignatureAlgorithms = []SignatureScheme{
 	PSSWithSHA256,
 	ECDSAWithP256AndSHA256,
 	Ed25519,
@@ -960,9 +962,6 @@ func (c *Config) time() time.Time {
 }
 
 func (c *Config) cipherSuites() []uint16 {
-	if needFIPS() {
-		return fipsCipherSuites(c)
-	}
 	if c.CipherSuites != nil {
 		return c.CipherSuites
 	}
@@ -976,6 +975,9 @@ var supportedVersions = []uint16{
 	VersionTLS10,
 }
 
+// debugEnableTLS10 enables TLS 1.0. See issue 45428.
+var debugEnableTLS10 = godebug.Get("tls10default") == "1"
+
 // roleClient and roleServer are meant to call supportedVersions and parents
 // with more readability at the callsite.
 const roleClient = true
@@ -984,10 +986,7 @@ const roleServer = false
 func (c *Config) supportedVersions(isClient bool) []uint16 {
 	versions := make([]uint16, 0, len(supportedVersions))
 	for _, v := range supportedVersions {
-		if needFIPS() && (v < fipsMinVersion(c) || v > fipsMaxVersion(c)) {
-			continue
-		}
-		if (c == nil || c.MinVersion == 0) &&
+		if (c == nil || c.MinVersion == 0) && !debugEnableTLS10 &&
 			isClient && v < VersionTLS12 {
 			continue
 		}
@@ -1027,9 +1026,6 @@ func supportedVersionsFromMax(maxVersion uint16) []uint16 {
 var defaultCurvePreferences = []CurveID{X25519, CurveP256, CurveP384, CurveP521}
 
 func (c *Config) curvePreferences() []CurveID {
-	if needFIPS() {
-		return fipsCurvePreferences(c)
-	}
 	if c == nil || len(c.CurvePreferences) == 0 {
 		return defaultCurvePreferences
 	}

@@ -32,14 +32,6 @@ type aesCipherAsm struct {
 var supportsAES = cpu.X86.HasAES || cpuoverlay.Arm64HasAES()
 var supportsGFMUL = cpu.X86.HasPCLMULQDQ || cpuoverlay.Arm64HasPMULL()
 
-// aesCipherGCM implements crypto/cipher.gcmAble so that crypto/cipher.NewGCM
-// will use the optimised implementation in aes_gcm.go when possible.
-// Instances of this type only exist when hasGCMAsm returns true. Likewise,
-// the gcmAble implementation is in aes_gcm.go.
-type aesCipherGCM struct {
-	aesCipherAsm
-}
-
 func newCipher(key []byte) (cipher.Block, error) {
 	if !supportsAES {
 		return newCipherGeneric(key)
@@ -54,8 +46,6 @@ func newCipher(key []byte) (cipher.Block, error) {
 		rounds = 12
 	case 256 / 8:
 		rounds = 14
-	default:
-		return nil, KeySizeError(len(key))
 	}
 
 	expandKeyAsm(rounds, &key[0], &c.enc[0], &c.dec[0])

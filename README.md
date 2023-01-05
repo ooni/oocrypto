@@ -99,19 +99,6 @@ we're tracking with this fork
 
 - [ ] run the following commands:
 
-```bash
-set -ex
-git checkout stable
-git remote add golang git@github.com:golang/go.git || git fetch golang
-git branch -D golang-upstream golang-crypto-upstream merged-stable || true
-git fetch golang
-git checkout -b golang-upstream go1.19.4
-git subtree split -P src/crypto/ -b golang-crypto-upstream
-git checkout stable
-git checkout -b merged-stable
-git merge golang-crypto-upstream
-```
-
 - [ ] fix all the likely merge conflicts
 
 - [ ] delete all the new packages we can safely delete. We can safely

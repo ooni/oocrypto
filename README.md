@@ -97,7 +97,8 @@ by reading [os_linux.go](https://github.com/golang/go/blob/go1.19.4/src/runtime/
 and update the link to `os_linux.go` based on the upstream version that
 we're tracking with this fork
 
-- [ ] run the following commands:
+- [ ] update [UPSTREAM](UPSTREAM), commit the change, and then
+run the `./tools/merge.bash` script to merge from upstream;
 
 - [ ] fix all the likely merge conflicts
 

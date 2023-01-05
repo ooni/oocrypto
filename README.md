@@ -103,7 +103,7 @@ git checkout stable
 git remote add golang git@github.com:golang/go.git || git fetch golang
 git branch -D golang-upstream golang-crypto-upstream merged-stable || true
 git fetch golang
-git checkout -b golang-upstream go1.18.6
+git checkout -b golang-upstream go1.19.4
 git subtree split -P src/crypto/ -b golang-crypto-upstream
 git checkout stable
 git checkout -b merged-stable

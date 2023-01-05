@@ -51,6 +51,8 @@ type TLSConn interface {
     HandshakeContext(ctx context.Context) error
 
     ConnectionState() tls.ConnectionState
+
+    NetConn() net.Conn
 }
 ```
 
@@ -91,7 +93,7 @@ to improve hardware capability detection on `android/arm64`.
 (Adapted from ooni/oohttp instructions.)
 
 - [ ] check whether hardware capability detection has been improved upstream
-by reading [os_linux.go](https://github.com/golang/go/blob/go1.18.5/src/runtime/os_linux.go#L238)
+by reading [os_linux.go](https://github.com/golang/go/blob/go1.19.4/src/runtime/os_linux.go#L238)
 and update the link to `os_linux.go` based on the upstream version that
 we're tracking with this fork
 
@@ -133,8 +135,6 @@ the following checks (we could also use `go list` as follows
 
 - [ ] double check whether we need to add more checks to the list above (you
 can get a list of packages using `tree -d`)
-
-- [ ] manually import the latest `src/internal/godebug` from upstream
 
 - [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
 in the `ConnStdlib.ConnectionState` method

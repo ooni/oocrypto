@@ -35,6 +35,8 @@ type clientHandshakeState struct {
 	session      *ClientSessionState
 }
 
+var testingOnlyForceClientHelloSignatureAlgorithms []SignatureScheme
+
 func (c *Conn) makeClientHello() (*clientHelloMsg, ecdheParameters, error) {
 	config := c.config
 	if len(config.ServerName) == 0 && !config.InsecureSkipVerify {
@@ -118,7 +120,10 @@ func (c *Conn) makeClientHello() (*clientHelloMsg, ecdheParameters, error) {
 	}
 
 	if hello.vers >= VersionTLS12 {
-		hello.supportedSignatureAlgorithms = supportedSignatureAlgorithms
+		hello.supportedSignatureAlgorithms = supportedSignatureAlgorithms()
+	}
+	if testingOnlyForceClientHelloSignatureAlgorithms != nil {
+		hello.supportedSignatureAlgorithms = testingOnlyForceClientHelloSignatureAlgorithms
 	}
 
 	var params ecdheParameters
@@ -862,6 +867,7 @@ func (c *Conn) verifyServerCertificate(certificates [][]byte) error {
 			DNSName:       c.config.ServerName,
 			Intermediates: x509.NewCertPool(),
 		}
+
 		for _, cert := range certs[1:] {
 			opts.Intermediates.AddCert(cert)
 		}

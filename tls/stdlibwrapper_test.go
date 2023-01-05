@@ -67,6 +67,9 @@ type connStdlibUnderlyingConnMockable struct {
 
 	// MockHandshakeContext allows to mock the HandshakeContext method.
 	MockHandshakeContext func(ctx context.Context) error
+
+	// MockNetConn allows to mock the NetConn method
+	MockNetConn func() net.Conn
 }
 
 // ConnectionState calls MockConnectionState.
@@ -77,6 +80,11 @@ func (c *connStdlibUnderlyingConnMockable) ConnectionState() ConnectionState {
 // HandshakeContext calls MockHandshakeContext.
 func (c *connStdlibUnderlyingConnMockable) HandshakeContext(ctx context.Context) error {
 	return c.MockHandshakeContext(ctx)
+}
+
+// NetConn calls MockNetConn
+func (c *connStdlibUnderlyingConnMockable) NetConn() net.Conn {
+	return c.MockNetConn()
 }
 
 func TestConnStdlib_ConnectionState(t *testing.T) {

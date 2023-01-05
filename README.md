@@ -51,8 +51,6 @@ type TLSConn interface {
     HandshakeContext(ctx context.Context) error
 
     ConnectionState() tls.ConnectionState
-
-    NetConn() net.Conn
 }
 ```
 
@@ -135,6 +133,8 @@ the following checks (we could also use `go list` as follows
 
 - [ ] double check whether we need to add more checks to the list above (you
 can get a list of packages using `tree -d`)
+
+- [ ] manually import the latest `src/internal/godebug` from upstream
 
 - [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
 in the `ConnStdlib.ConnectionState` method

@@ -9,8 +9,8 @@ package aes
 import (
 	"crypto/cipher"
 
+	"github.com/ooni/oocrypto/internal/alias"
 	"github.com/ooni/oocrypto/internal/cpuoverlay"
-	"github.com/ooni/oocrypto/internal/subtle"
 	"golang.org/x/sys/cpu"
 )
 
@@ -29,9 +29,6 @@ type aesCipherAsm struct {
 	aesCipher
 }
 
-var supportsAES = cpu.X86.HasAES || cpuoverlay.Arm64HasAES()
-var supportsGFMUL = cpu.X86.HasPCLMULQDQ || cpuoverlay.Arm64HasPMULL()
-
 // aesCipherGCM implements crypto/cipher.gcmAble so that crypto/cipher.NewGCM
 // will use the optimised implementation in aes_gcm.go when possible.
 // Instances of this type only exist when hasGCMAsm returns true. Likewise,
@@ -39,6 +36,9 @@ var supportsGFMUL = cpu.X86.HasPCLMULQDQ || cpuoverlay.Arm64HasPMULL()
 type aesCipherGCM struct {
 	aesCipherAsm
 }
+
+var supportsAES = cpu.X86.HasAES || cpuoverlay.Arm64HasAES()
+var supportsGFMUL = cpu.X86.HasPCLMULQDQ || cpuoverlay.Arm64HasPMULL()
 
 func newCipher(key []byte) (cipher.Block, error) {
 	if !supportsAES {
@@ -74,7 +74,7 @@ func (c *aesCipherAsm) Encrypt(dst, src []byte) {
 	if len(dst) < BlockSize {
 		panic("crypto/aes: output not full block")
 	}
-	if subtle.InexactOverlap(dst[:BlockSize], src[:BlockSize]) {
+	if alias.InexactOverlap(dst[:BlockSize], src[:BlockSize]) {
 		panic("crypto/aes: invalid buffer overlap")
 	}
 	encryptBlockAsm(len(c.enc)/4-1, &c.enc[0], &dst[0], &src[0])
@@ -87,7 +87,7 @@ func (c *aesCipherAsm) Decrypt(dst, src []byte) {
 	if len(dst) < BlockSize {
 		panic("crypto/aes: output not full block")
 	}
-	if subtle.InexactOverlap(dst[:BlockSize], src[:BlockSize]) {
+	if alias.InexactOverlap(dst[:BlockSize], src[:BlockSize]) {
 		panic("crypto/aes: invalid buffer overlap")
 	}
 	decryptBlockAsm(len(c.dec)/4-1, &c.dec[0], &dst[0], &src[0])

@@ -474,7 +474,7 @@ func (f *prefixNonceAEAD) Open(out, nonce, ciphertext, additionalData []byte) ([
 	return f.aead.Open(out, f.nonce[:], ciphertext, additionalData)
 }
 
-// xoredNonceAEAD wraps an AEAD by XORing in a fixed pattern to the nonce
+// xorNonceAEAD wraps an AEAD by XORing in a fixed pattern to the nonce
 // before each call.
 type xorNonceAEAD struct {
 	nonceMask [aeadNonceLength]byte
@@ -518,12 +518,7 @@ func aeadAESGCM(key, noncePrefix []byte) aead {
 		panic(err)
 	}
 	var aead cipher.AEAD
-	if boring.Enabled {
-		aead, err = boring.NewGCMTLS(aes)
-	} else {
-		boring.Unreachable()
-		aead, err = cipher.NewGCM(aes)
-	}
+	aead, err = cipher.NewGCM(aes)
 	if err != nil {
 		panic(err)
 	}

@@ -131,4 +131,6 @@ in the `ConnStdlib.ConnectionState` method
 
 - [ ] `go test -race ./...` must succeed
 
+- [ ] run `go get -u -v ./... && go mod tidy`
+
 - [ ] open a pull request and merge it preserving history

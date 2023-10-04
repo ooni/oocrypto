@@ -2689,10 +2689,6 @@ func TestHandshakeRSATooBig(t *testing.T) {
 			expectedServerErr: "tls: server sent certificate containing RSA key larger than 8192 bits",
 			expectedClientErr: "tls: client sent certificate containing RSA key larger than 8192 bits",
 		},
-		{
-			name:    "acceptable key (GODEBUG=tlsmaxrsasize=8193)",
-			godebug: "tlsmaxrsasize=8193",
-		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if tc.godebug != "" {

@@ -93,7 +93,7 @@ to improve hardware capability detection on `android/arm64`.
 (Adapted from ooni/oohttp instructions.)
 
 - [ ] check whether hardware capability detection has been improved upstream
-by reading [os_linux.go](https://github.com/golang/go/blob/go1.20.4/src/runtime/os_linux.go#L245)
+by reading [os_linux.go](https://github.com/golang/go/blob/go1.20.8/src/runtime/os_linux.go#L246)
 and update the link to `os_linux.go` based on the upstream version that
 we're tracking with this fork
 
@@ -133,4 +133,4 @@ in the `ConnStdlib.ConnectionState` method
 
 - [ ] run `go get -u -v ./... && go mod tidy`
 
-- [ ] open a pull request and merge it preserving history
+- [ ] open a pull request using this check-list as its content and merge it preserving history

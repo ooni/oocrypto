@@ -1415,6 +1415,10 @@ func (c *Conn) closeNotify() error {
 //
 // For control over canceling or setting a timeout on a handshake, use
 // HandshakeContext or the Dialer's DialContext method instead.
+//
+// In order to avoid denial of service attacks, the maximum RSA key size allowed
+// in certificates sent by either the TLS server or client is limited to 8192
+// bits.
 func (c *Conn) Handshake() error {
 	return c.HandshakeContext(context.Background())
 }

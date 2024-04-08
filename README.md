@@ -18,7 +18,7 @@ will continue to keep this fork up to date as long as it serves our goals.
 
 ## Intended usage
 
-You MUST use this package with the exact Go version from which we extracted
+You SHOULD use this package with the exact Go version from which we extracted
 the source, which is documented in the [Update procedure](#update-procedure) section. The
 standard library is composed of tightly integrated packages, hence
 using this code with another Go version could cause subtle security issues.
@@ -88,44 +88,26 @@ of these commits, we replaced `internal/cpu` with `golang.org/x/sys/cpu`.
 Finally, we landed [patches](https://github.com/ooni/oocrypto/compare/f09fe46bcb80d2e747b0c0ea9a2835e70710690c...4dff9e0864cd49113a36ac8112cf887cbe215d54)
 to improve hardware capability detection on `android/arm64`.
 
+We changed approach with [#26](https://github.com/ooni/oocrypto/pull/26) to
+use [gitlab.com/yawning/bsaes](https://gitlab.com/yawning/bsaes) for constant
+time AES.
+
 ## Update procedure
 
 (Adapted from ooni/oohttp instructions.)
-
-- [ ] check whether hardware capability detection has been improved upstream
-by reading [os_linux.go](https://github.com/golang/go/blob/go1.21.9/src/runtime/os_linux.go#L250)
-and update the link to `os_linux.go` based on the upstream version that
-we're tracking with this fork
 
 - [ ] update [UPSTREAM](UPSTREAM), commit the change, and then
 run the `./tools/merge.bash` script to merge from upstream;
 
 - [ ] fix all the likely merge conflicts
 
-- [ ] delete all the new packages we can safely delete. We can safely
-delete a package if the package is not `tls` and:
-
-1. either the package does not depend on `internal/cpu`
-
-2. or the documentation of the package does not explicitly state that
-the package is only secure depending on the CPU configuration, which
-currently only holds for `aes` (see [aes/const.go](aes/const.go))
-
-- [ ] ensure that every forked package is never imported by using
-the following checks (we could also use `go list` as follows
-`GOOS=os GOARCH=arch go list --json ./...`):
-
-1. `git grep 'subtle"'`
-
-2. `git grep 'tls"'`
-
-3. `git grep 'aes"'`
-
-- [ ] double check whether we need to add more checks to the list above (you
-can get a list of packages using `tree -d`)
+- [ ] delete every package except for `tls`
 
 - [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
 in the `ConnStdlib.ConnectionState` method
+
+- [ ] use `./tools/compare.bash` to make sure the changes with respect
+to upstream are reasonable
 
 - [ ] `go build -v ./...` must succeed
 

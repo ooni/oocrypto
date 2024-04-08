@@ -15,8 +15,8 @@ import (
 	"fmt"
 	"hash"
 
-	"github.com/ooni/oocrypto/internal/aes"
 	"github.com/ooni/oocrypto/internal/boring"
+	aes "gitlab.com/yawning/bsaes.git"
 	"golang.org/x/crypto/chacha20poly1305"
 )
 

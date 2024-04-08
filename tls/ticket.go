@@ -13,7 +13,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/ooni/oocrypto/internal/aes"
+	aes "gitlab.com/yawning/bsaes.git"
 	"golang.org/x/crypto/cryptobyte"
 )
 

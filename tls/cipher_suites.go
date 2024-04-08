@@ -352,6 +352,8 @@ var defaultCipherSuitesTLS13NoAES = []uint16{
 	TLS_AES_256_GCM_SHA384,
 }
 
+// Note: we always set this field to true because we're using gitlab.com/yawning/bsaes
+// to implement AES, therefore, the pure Go fallback is constant time.
 var (
 	hasAESGCMHardwareSupport = true
 )

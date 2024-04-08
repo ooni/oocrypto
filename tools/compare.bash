@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-upstreamrepo=./upstreamrepo
+upstreamrepo=$(mktemp -d)/upstreamrepo
 TAG=$(cat UPSTREAM)
 test -d $upstreamrepo || git clone git@github.com:golang/go.git $upstreamrepo
 (

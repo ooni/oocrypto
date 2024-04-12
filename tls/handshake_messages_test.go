@@ -48,15 +48,6 @@ func mustMarshal(t *testing.T, msg handshakeMessage) []byte {
 	return b
 }
 
-func mustMarshal(t *testing.T, msg handshakeMessage) []byte {
-	t.Helper()
-	b, err := msg.marshal()
-	if err != nil {
-		t.Fatal(err)
-	}
-	return b
-}
-
 func TestMarshalUnmarshal(t *testing.T) {
 	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
 

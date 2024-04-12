@@ -18,7 +18,7 @@ will continue to keep this fork up to date as long as it serves our goals.
 
 ## Intended usage
 
-You MUST use this package with the exact Go version from which we extracted
+You SHOULD use this package with the exact Go version from which we extracted
 the source, which is documented in the [Update procedure](#update-procedure) section. The
 standard library is composed of tightly integrated packages, hence
 using this code with another Go version could cause subtle security issues.
@@ -93,7 +93,7 @@ to improve hardware capability detection on `android/arm64`.
 (Adapted from ooni/oohttp instructions.)
 
 - [ ] check whether hardware capability detection has been improved upstream
-by reading [os_linux.go](https://github.com/golang/go/blob/go1.20.14/src/runtime/os_linux.go#L246)
+by reading [os_linux.go](https://github.com/golang/go/blob/go1.21.9/src/runtime/os_linux.go#L250)
 and update the link to `os_linux.go` based on the upstream version that
 we're tracking with this fork
 
@@ -126,6 +126,9 @@ can get a list of packages using `tree -d`)
 
 - [ ] ensure that `stdlibwrapper.go` correctly fills `tls.ConnectionState`
 in the `ConnStdlib.ConnectionState` method
+
+- [ ] use `./tools/compare.bash` to make sure the changes with respect
+to upstream are reasonable
 
 - [ ] `go build -v ./...` must succeed
 

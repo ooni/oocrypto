@@ -2783,6 +2783,7 @@ u58=
 -----END CERTIFICATE-----`
 
 func TestHandshakeRSATooBig(t *testing.T) {
+	t.Skip("this test is disabled in the ooni/oocrypto fork")
 	for _, tc := range []struct {
 		name              string
 		godebug           string

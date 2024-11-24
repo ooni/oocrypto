@@ -14,13 +14,13 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"internal/godebug"
 	"io"
 	"net"
 	"sync"
 	"sync/atomic"
 	"time"
 
+	"github.com/ooni/oocrypto/internal/godebug"
 	"github.com/ooni/oocrypto/subtle"
 )
 

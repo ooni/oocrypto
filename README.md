@@ -125,6 +125,8 @@ the following checks (we could also use `go list` as follows
 
 5. `git grep 'boring"'`
 
+6. `git grep 'godebug"'`
+
 - [ ] double check whether we need to add more checks to the list above (you
 can get a list of packages using `tree -d`)
 

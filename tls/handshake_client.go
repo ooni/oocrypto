@@ -16,13 +16,13 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"internal/godebug"
 	"io"
 	"net"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/ooni/oocrypto/internal/godebug"
 	"github.com/ooni/oocrypto/subtle"
 )
 

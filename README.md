@@ -93,7 +93,7 @@ to improve hardware capability detection on `android/arm64`.
 (Adapted from ooni/oohttp instructions.)
 
 - [ ] check whether hardware capability detection has been improved upstream
-by reading [os_linux.go](https://github.com/golang/go/blob/go1.21.9/src/runtime/os_linux.go#L250)
+by reading [os_linux.go](https://github.com/golang/go/blob/go1.22.2/src/runtime/os_linux.go#L251)
 and update the link to `os_linux.go` based on the upstream version that
 we're tracking with this fork
 
@@ -124,6 +124,8 @@ the following checks (we could also use `go list` as follows
 4. `git grep 'alias"'`
 
 5. `git grep 'boring"'`
+
+6. `git grep 'godebug"'`
 
 - [ ] double check whether we need to add more checks to the list above (you
 can get a list of packages using `tree -d`)

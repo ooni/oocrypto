@@ -18,9 +18,11 @@ import (
 	"hash"
 	"io"
 	"net"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/ooni/oocrypto/internal/godebug"
 	"github.com/ooni/oocrypto/subtle"
 )
 
@@ -525,6 +527,10 @@ func (hs *clientHandshakeState) pickCipherSuite() error {
 		return errors.New("tls: server chose an unconfigured cipher suite")
 	}
 
+	if hs.c.config.CipherSuites == nil && rsaKexCiphers[hs.suite.id] {
+		tlsrsakex.IncNonDefault()
+	}
+
 	hs.c.cipherSuite = hs.suite.id
 	return nil
 }
@@ -941,7 +947,17 @@ func (hs *clientHandshakeState) sendFinished(out []byte) error {
 // to verify the signatures of during a TLS handshake.
 const defaultMaxRSAKeySize = 8192
 
+var tlsmaxrsasize = godebug.New("tlsmaxrsasize")
+
 func checkKeySize(n int) (max int, ok bool) {
+	if v := tlsmaxrsasize.Value(); v != "" {
+		if max, err := strconv.Atoi(v); err == nil {
+			if (n <= max) != (n <= defaultMaxRSAKeySize) {
+				tlsmaxrsasize.IncNonDefault()
+			}
+			return max, n <= max
+		}
+	}
 	return defaultMaxRSAKeySize, n <= defaultMaxRSAKeySize
 }
 
